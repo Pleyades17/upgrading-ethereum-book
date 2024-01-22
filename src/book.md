@@ -7794,7 +7794,7 @@ Storing past roots like this allows Merkle proofs to be constructed about anythi
 
 Every time the Eth1 deposit contract processes a deposit from a new validator (as identified by its public key), a new entry is appended to the `state.validators` list.
 
-In the current design, validators are never removed from this list, even after exiting from being a validator. This is largely because there is nowhere yet to send a validator's remaining deposit and staking rewards, so they continue to need to be tracked in the beacon chain.
+In the current design, validators are never removed from this list, even after exiting from being a validator. They continue to be tracked in the beacon chain forever. There is a proposal, [EIP-6914](https://eips.ethereum.org/EIPS/eip-6914), to reuse (recycle) validator records some time after a validator has been exited and withdrawn, but it has not yet been adopted.
 
 The maximum length of this list is `VALIDATOR_REGISTRY_LIMIT`, which is one trillion, so we ought to be OK for a while, especially given that the minimum deposit amount is 1 Ether.
 
