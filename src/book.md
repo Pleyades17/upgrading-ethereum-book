@@ -325,7 +325,7 @@ Similarly, why did the proposer of block $D$ build on $B$ rather than $C$? Any o
 
 The various branches in the block tree are called "forks". Forks happen naturally as a consequence of network and processing delays. But they can also occur due to client faults, malicious client behaviour, or protocol upgrades that change the rules, making old blocks invalid with respect to the new rules. The last of these is sometimes called a "hard fork".
 
-The existence of forking in a consensus protocol is a consequence of prioritising liveness over safety, in the terms discussed [below](#safety-and-liveness): if you were to consult nodes that are following different forks they would give you different answers regarding the state of the system. Non-forking consensus protocols exist, such as [PBFT](https://www.scs.stanford.edu/nyu/03sp/sched/bfs.pdf) in the classical consensus world and [Tendermint](https://blog.cosmos.network/the-4-classes-of-faults-on-mainnet-bfabfbd2726c#a2f1) in the blockchain world. These protocols always produce a single linear chain and are thus formally "safe". However, they sacrifice liveness on asynchronous networks such as the Internet: rather than forking, they just stop entirely.
+The existence of forking in a consensus protocol is a consequence of prioritising liveness over safety, in the terms discussed [below](#safety-and-liveness): if you were to consult nodes that are following different forks they would give you different answers regarding the state of the system. Non-forking consensus protocols exist, such as [PBFT](https://www.scs.stanford.edu/nyu/03sp/sched/bfs.pdf) in the classical consensus world and [Tendermint](https://blog.cosmos.network/the-4-classes-of-faults-on-mainnet-bfabfbd2726c#a2f1) in the blockchain world. These protocols always produce a single linear chain and are thus formally "safe". However, they sacrifice liveness on asynchronous networks such as the Internet: rather than forking in difficult network conditions, they might just stop entirely.
 
 #### Fork choice rules
 
@@ -417,7 +417,7 @@ Informally, an algorithm is said to be safe if "nothing bad ever happens".[^fn-s
 
 Examples of bad things that might happen in the blockchain context could be the double-spend of a coin, or the finalising of two conflicting checkpoints.
 
-An important facet of safety in a distributed system is "consistency". That is, if we were to ask different (honest) nodes about the state of the chain at some point in its progress, such as the balance of an account at a particular block height, then we should always get the same answer, no matter which node we ask. In a safe system, every node has an identical view of the history of the chain that never changes.
+An important aspect of safety in a distributed system is "consistency". That is, if we were to ask different (honest) nodes about the state of the chain at some point in its progress, such as the balance of an account at a particular block height, then we should always get the same answer, no matter which node we ask. In a safe system, every node has an identical view of the history of the chain that never changes.
 
 Effectively, safety means that our distributed system "behaves like a centralized implementation that executes operations atomically one at a time." (to quote [Castro and Liskov](https://www.scs.stanford.edu/nyu/03sp/sched/bfs.pdf)). A safe system is, in Vitalik's [taxonomy](https://medium.com/@VitalikButerin/the-meaning-of-decentralization-a0c92b76a274) of centralisation, logically centralised.
 
@@ -653,9 +653,9 @@ Much work remains, however. In the next sections we will take deeper dives into 
 
 #### See also
 
-On the history of how everything came together, Vitalik made a terrific [tweet storm](https://web.archive.org/web/20230630135150/https://nitter.it/VitalikButerin/status/1029900695925706753). Consolidated versions are available [here](https://www.trustnodes.com/2018/08/16/vitalik-buterin-tells-story-race-vlad-zamfir-implement-proof-stake-casper) and [here](https://hackmd.io/@liangcc/BJZDR1mIX?type=view). He discusses weak subjectivity a little, which we will deal with [later](/part2/validator/weak_subjectivity/).
+On the history of how everything came together, Vitalik made a terrific [tweet storm](https://web.archive.org/web/20230630135150/https://nitter.it/VitalikButerin/status/1029900695925706753). Consolidated versions are available [here](https://web.archive.org/web/20180816143143/https://www.trustnodes.com/2018/08/16/vitalik-buterin-tells-story-race-vlad-zamfir-implement-proof-stake-casper) and [here](https://hackmd.io/@liangcc/BJZDR1mIX?type=view). He discusses weak subjectivity a little, which we will deal with [later](/part2/validator/weak_subjectivity/).
 
-The [Proof of Stake FAQ](https://vitalik.ca/general/2017/12/31/pos_faq.html) remains an excellent primer on many of the topics we'll be covering.
+The [Proof of Stake FAQ](https://web.archive.org/web/20231109183738/https://vitalik.ca/general/2017/12/31/pos_faq.html) remains an excellent primer on many of the topics we'll be covering.
 
 Joachim Neu's presentation, [The Why and How of PoS Ethereum's Consensus Problem](https://www.youtube.com/watch?v=2nMS-TK_tMw) (at ETHconomics, Devconnect 2022), is a very accessible insight into the availability&ndash;finality trade-off, and how Ethereum seeks to manage it. We'll pick up again on the idea of "nested ledgers" when we get to the [Gasper protocol](/part2/consensus/gasper/).
 
@@ -882,7 +882,7 @@ In principle, all this extra information ought to allow us to be very sure, very
 
 Proof of stake's ultimate answer to this is finality, which we shall look at in the next section. LMD GHOST on its own does not provide finality. However, it's interesting to consider whether there is some heuristic analogous to proof of work's confirmations rule that we can use, and it turns out that [there is](https://ethresear.ch/t/confirmation-rule-for-ethereum-pos/15454?u=benjaminion). In fact, it improves on the PoW confirmation rule by giving a "yes/no" statement about the safety of a block, rather than a probability.
 
-The details of the confirmation rule are described by Aditya Asgaonkar in a [blog post](https://www.adiasg.me/confirmation-rule-for-ethereum/) and an accompanying paper. The general idea is that, for a block $b$, we calculate two values $q$ and $q_\text{min}$. When $q > q_\text{min}$, _and_ the network remains close to synchronous, then that block is confirmed as "safe". We can be fully confident that it will not be reorged.
+The details of the confirmation rule are described by Aditya Asgaonkar in a [blog post](https://web.archive.org/web/20240422100537/https://www.adiasg.me/confirmation-rule-for-ethereum/) and an [accompanying paper](https://arxiv.org/abs/2405.00549). The general idea is that, for a block $b$, we calculate two values $q$ and $q_\text{min}$. When $q > q_\text{min}$, _and_ the network remains close to synchronous, then that block is confirmed as "safe". We can be fully confident that it will not be reorged.
 
 The quantity $q^n_b$ is defined as the weight of the subtree rooted at $b$ at slot $n$ divided by the total weight of votes cast since $b$ was produced. Simply put, if, in the slots since $b$ was proposed, 80% of validators voted for $b$ or a descendant of $b$, then $q^n_b$ would be $0.8$.
 
@@ -892,7 +892,7 @@ Now, if $q^n_{b'} > q_\text{min}$ for $b$ and all its (non-finalised) ancestors,
 
 The idea is that, once a branch up to block $b$ has accumulated a simple majority of the available voting weight, then all honest validators will continue to vote for that branch, so it will maintain its majority indefinitely. One way this can fail is if dishonest validators swap their votes to another branch, giving that branch a majority instead. That's why we add a fraction $\beta$ to the basic majority safety parameter of $\frac{1}{2}$, so that, even if all the dishonest validators swap branches, our branch maintains a majority. The other way this can fail is if the network begins to suffer delays or partitions (loses synchrony), so that some honest validators cannot see other honest validators' votes, hence the reliance on the network remaining sufficiently synchronous.
 
-While this seems very intuitive, there are some important subtleties and complications related to the integration with Casper FFG that modify the confirmation rule, so anyone dealing with this should consult the [full paper](https://ethresear.ch/uploads/short-url/fV7zyTggJtMn8xlUUNVXTOB532G.pdf) (which remains a draft). In addition, [proposer boost](/part2/consensus/issues/#proposer-boost) makes it easier for an adversarial block proposer to reorg a block, so we need to account for that as well.
+While this seems very intuitive, there are some important subtleties and complications related to the integration with Casper FFG that modify the confirmation rule, so anyone dealing with this should consult the [full paper](https://arxiv.org/abs/2405.00549). In addition, [proposer boost](/part2/consensus/issues/#proposer-boost) makes it easier for an adversarial block proposer to reorg a block, so we need to account for that as well.
 
 The table below summarises the differences between the confirmation rule and finality for a block.
 
@@ -992,7 +992,7 @@ The [fork choice](https://github.com/ethereum/consensus-specs/blob/v1.3.0/specs/
     - Validating those votes is mostly taken care of in [`validate_on_attestation()`](/part3/forkchoice/phase0/#validate_on_attestation).
     - [`update_latest_messages()`](/part3/forkchoice/phase0/#update_latest_messages) takes care of the record keeping around latest messages.
 
-The introduction to Vitalik's [annotated fork choice](https://github.com/ethereum/annotated-spec/blob/master/phase0/fork-choice.md) is an excellent overview (though some of the details in the spec itself are now outdated). The LMD GHOST part of Vitalik's [CBC Casper tutorial](https://vitalik.ca/general/2018/12/05/cbc_casper.html) has a nice explainer. Ignore the later stuff about finality in Casper CBC - that does not concern us.
+The introduction to Vitalik's [annotated fork choice](https://github.com/ethereum/annotated-spec/blob/master/phase0/fork-choice.md) is an excellent overview (though some of the details in the spec itself are now outdated). The LMD GHOST part of Vitalik's [CBC Casper tutorial](https://web.archive.org/web/20231102070341/https://vitalik.ca/general/2018/12/05/cbc_casper.html) has a nice explainer. Ignore the later stuff about finality in Casper CBC - that does not concern us.
 
 Some weaknesses of LMD GHOST as it is currently implemented in Ethereum are reviewed in the [RLMD GHOST](https://arxiv.org/pdf/2302.11326.pdf) paper. For example, LMD GHOST does not handle dynamic participation securely &ndash; that is, when large numbers of validators go offline &ndash; among other things. We will consider some of the issues [later](/part2/consensus/issues/), but the introduction to that paper is a good read if you want to get a head start.
 
@@ -1849,7 +1849,7 @@ The original [Casper the Friendly Finality Gadget](https://arxiv.org/pdf/1710.09
 
 That paper also discusses using an "inactivity leak" to recover from catastrophic crashes (section 4.2). I've covered [elsewhere](/part2/incentives/inactivity/) how we've implemented the inactivity leak in Eth2.
 
-Once again, Vitalik's Casper history [Tweet storm](https://web.archive.org/web/20230630135150/https://nitter.it/VitalikButerin/status/1029900695925706753) (also available [here](https://www.trustnodes.com/2018/08/16/vitalik-buterin-tells-story-race-vlad-zamfir-implement-proof-stake-casper) and [here](https://hackmd.io/@liangcc/BJZDR1mIX?type=view)) provides terrific first-hand background to the development of the Casper consensus protocols, CBC and FFG.
+Once again, Vitalik's Casper history [Tweet storm](https://web.archive.org/web/20230630135150/https://nitter.it/VitalikButerin/status/1029900695925706753) (also available [here](https://web.archive.org/web/20180816143143/https://www.trustnodes.com/2018/08/16/vitalik-buterin-tells-story-race-vlad-zamfir-implement-proof-stake-casper) and [here](https://hackmd.io/@liangcc/BJZDR1mIX?type=view)) provides terrific first-hand background to the development of the Casper consensus protocols, CBC and FFG.
 
 In the consensus layer specifications:
 
@@ -3127,7 +3127,7 @@ The main practical constraint on the number of validators in a monolithic[^fn-mo
 <!-- markdownlint-disable code-block-style ul-indent -->
 [^fn-monolithic]: A monolithic blockchain is one in which all nodes process all information, be it transactions or consensus-related. Pretty much all blockchains to date, including Ethereum, have been monolithic. One way to escape the scalability trilemma is to go "modular". This is the intent behind Ethereum's [rollup-centric roadmap](https://ethereum-magicians.org/t/a-rollup-centric-ethereum-roadmap/4698).
 
-    - More on the general scalability trilemma: [Why sharding is great](https://vitalik.ca/general/2021/04/07/sharding.html) by Vitalik.
+    - More on the general scalability trilemma: [Why sharding is great](https://web.archive.org/web/20231102071831/https://vitalik.ca/general/2021/04/07/sharding.html) by Vitalik.
     - More on modularity: [Modular Blockchains: A Deep Dive](https://volt.capital/blog/modular-blockchains) by Alec Chen of Volt Capital.
     - Well worth a read: Polynya's entertaining (if a little grumpy), [The horrific inefficiencies of monolithic blockchains](https://polynya.mirror.xyz/3-omFNK3uU0iAaYSpFz0f9rCvrDBjx0H3XOSDGXU8hY).
 <!-- markdownlint-enable code-block-style ul-indent -->
@@ -4784,7 +4784,7 @@ One relatively simple defence against this &ndash; the one we are using in Ether
 
 ##### Threshold signatures
 
-In addition to aggregation, the BLS scheme also supports [threshold signatures](https://alinush.github.io/2020/03/12/scalable-bls-threshold-signatures.html). This is where a secret key is divided between $N$ validators. For a predefined value of $M \le N$, if $M$ of the validators sign a message then a single joint public key of all the validators can be used to verify the signature.
+In addition to aggregation, the BLS scheme also supports [threshold signatures](https://alinush.github.io/threshold-bls). This is where a secret key is divided between $N$ validators. For a predefined value of $M \le N$, if $M$ of the validators sign a message then a single joint public key of all the validators can be used to verify the signature.
 
 Threshold signatures are not currently used within the core Ethereum&nbsp;2 protocol. However, they are useful at an infrastructure level. For example, for security and resilience it might be desirable to split a validator's secret key between multiple locations. If an attacker acquires fewer than $M$ shares then the key still remains secure; if up to  $N-M$ keystores are unavailable, the validator can still sign correctly. An operational example of this is Attestant's [Dirk](https://www.attestant.io/posts/introducing-dirk/) key manager.
 
@@ -5437,7 +5437,7 @@ A good place to start exploring verifiable delay functions is the [VDF Alliance 
 
 Shuffling is used to randomly assign validators to committees, both attestation committees and sync committees. It is also used to select the block proposer at each slot.
 
-Although there are [pitfalls](https://www.developer.com/tech/article.php/616221/How-We-Learned-to-Cheat-at-Online-Poker-A-Study-in-Software-Security.htm) to be aware of, shuffling is a well understood problem in computer science. The gold standard is probably the [Fisher&ndash;Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle). So why aren't we using that for Eth2? In short: light clients.
+Although there are [pitfalls](https://web.archive.org/web/20230208135555/https://www.developer.com/guides/how-we-learned-to-cheat-at-online-poker-a-study-in-software-security/) to be aware of, shuffling is a well understood problem in computer science. The gold standard is probably the [Fisher&ndash;Yates shuffle](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle). So why aren't we using that for Eth2? In short: light clients.
 
 Other shuffles rely on processing the entire list of elements to find the final ordering. We wish to spare light clients this burden. Ideally, they should deal with only the subsets of lists that they are interested in. Therefore, rather than Fisher&ndash;Yates, we are using a construction called a "swap-or-not" shuffle. The swap-or-not shuffle can tell you the destination index (or, conversely, the origin index) of a single list element, so is ideal when dealing with subsets of the whole validator set.
 
@@ -7977,7 +7977,7 @@ These first four of these constants were introduced at the Bellatrix pre-Merge u
 
 The execution payload (formerly known as an Eth1 block) contains a list of up to `MAX_TRANSACTIONS_PER_PAYLOAD` normal Ethereum transactions. Each of these has size up to `MAX_BYTES_PER_TRANSACTION`. These constants are needed only because [SSZ list types](/part2/building_blocks/ssz/#lists) require a maximum size to be specified. They are set ludicrously large, but that's not a problem in practice.
 
-`BYTES_PER_LOGS_BLOOM` and `MAX_EXTRA_DATA_BYTES` are a direct carry-over from Eth1 blocks as specified in the [Yellow Paper](https://ethereum.org/615606b8e1e1da72687e66dba79771e9/yellow-paper-berlin.pdf), being the size of a block's Bloom filter and the size of a block's extra data field respectively. The execution payload's extra data is analogous to a beacon block's graffiti - the block builder can set it to any value they choose.
+`BYTES_PER_LOGS_BLOOM` and `MAX_EXTRA_DATA_BYTES` are a direct carry-over from Eth1 blocks as specified in the [Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf), being the size of a block's Bloom filter and the size of a block's extra data field respectively. The execution payload's extra data is analogous to a beacon block's graffiti - the block builder can set it to any value they choose.
 
 `MAX_WITHDRAWALS_PER_PAYLOAD` was introduced at the [Capella upgrade](/part4/history/capella/). It is the maximum number of withdrawals that the consensus client will ask the execution client to include in an execution payload. As a consequence, the rate of withdrawals is limited to `MAX_WITHDRAWALS_PER_PAYLOAD` per slot.
 
@@ -8958,9 +8958,7 @@ This is a significant change, and is what led to the name "The Merge".
 
 The `ExecutionPayload` is contained in the [`BeaconBlock`](/part3/containers/blocks/#beaconblock) structure.
 
-The fields of `ExecutionPayload` mostly reflect the old structure of Eth1 blocks as described in Ethereum's [Yellow Paper](https://ethereum.org/615606b8e1e1da72687e66dba79771e9/yellow-paper-berlin.pdf)[^fn-yellow-paper-berlin], section 4.3. Differences from the Eth1 block structure are noted in the comments.
-
-[^fn-yellow-paper-berlin]: This is intended to be a permalink to the Yellow Paper's "Berlin" edition, a pre-Merge version of the YP. At the time of writing, the YP has not been updated for the "London" upgrade and is therefore missing the [EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) field `base_fee_per_gas`.
+The fields of `ExecutionPayload` mostly reflect the old structure of Eth1 blocks as described in Ethereum's [Yellow Paper](https://ethereum.github.io/yellowpaper/paper.pdf), section 4.3. Differences from the Eth1 block structure are noted in the comments.
 
 The execution payload differs from an old Eth1 block in the following respects:
 
